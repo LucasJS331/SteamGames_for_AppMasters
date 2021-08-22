@@ -1,0 +1,24 @@
+{
+  "name": "steamapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon -r dotenv/config ./src/server.js "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "async-redis": "^2.0.0",
+    "axios": "^0.21.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "knex": "^0.95.10",
+    "mysql2": "^2.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.12"
+  }
+}
