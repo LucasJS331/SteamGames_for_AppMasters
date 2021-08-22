@@ -1,9 +1,7 @@
 const axios = require("axios");
 const gameService = require("../services/game-service");
 const validator = require("../validator/game-validator");
-const asyncRedis = require("async-redis");
-const client = asyncRedis.createClient();
-
+const client = redis.createClient(process.env.REDIS_URL);
 class GamesController{
   async index(req,res){
       try {
