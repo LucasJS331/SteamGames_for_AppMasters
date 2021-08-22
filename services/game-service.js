@@ -33,7 +33,7 @@ class GameService{
       let result = await db.select(["id", "game_id", "game_name", "is_free","rating", "type", "detailed_description"]).table("favorite").where({user_name: user});
       return result;
     } catch (error) {
-       console.log();
+       console.log(error);
        return [];
     }
    }

@@ -15,7 +15,7 @@ class GamesController{
           for(let i = 50; i<=100; i++){
             gameList.push(resp[i])
           }
-          await client.set("gameCache", JSON.stringify(gameList), "EX", 1200);
+          await client.set("gameCache", JSON.stringify(gameList), "EX", 50);
           res.json({gameList});
 
         } else{
@@ -37,7 +37,7 @@ class GamesController{
         const gameInfo = await client.get(`gameInfo${appid}`)
         if(!gameInfo){
           const resp = (await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appid}`)).data
-          await client.set(`gameInfo${appid}`, JSON.stringify(resp),"EX",  1200);
+          await client.set(`gameInfo${appid}`, JSON.stringify(resp),"EX",50);
           res.json(resp);
           
         } else{
@@ -73,9 +73,14 @@ class GamesController{
           game_id: appid,
           rating
         }
-
         await gameService.addFavorite(gameData);
         res.send("favorite added successfully!");
+
+        //cria ou atualiza o cache
+        let allFavorites = await gameService.allFavorites(user_hash);
+        await client.set(`favorite:${user_hash}`, JSON.stringify(allFavorites), "EX",  50);
+        return;
+        
       } else{
         res.status(400).json(result.errorMassage);
       }
@@ -121,7 +126,7 @@ class GamesController{
         if(!favorite){
           // caso não houver cache
           let allFavorites = await gameService.allFavorites(user_hash);
-          await client.set(`favorite:${user_hash}`, JSON.stringify(allFavorites), "EX",  1200);
+          await client.set(`favorite:${user_hash}`, JSON.stringify(allFavorites), "EX", 60);
           allFavorites = allFavorites.length > 0 ? res.json(allFavorites) : res.sendStatus(404);
         }else{
           // caso houver cache
@@ -137,6 +142,7 @@ class GamesController{
     }
     
   }
+
 }
 
 module.exports = new GamesController();
