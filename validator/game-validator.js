@@ -7,23 +7,23 @@ class Validator{
     
         if(user_name == undefined){
             result.status = false;
-            result.errorMassage.push("nome invalido!")
+            result.errorMassage.push("user_hash is invalid!")
         }
     
         if(isNaN(game_id)){
             result.status = false;
-            result.errorMassage.push("appid invalido!")
+            result.errorMassage.push("appid is invalid!")
         }
     
         if(isNaN(rating)){
             result.status = false;
-            result.errorMassage.push("nota invalida!")
+            result.errorMassage.push("rating is invalid!")
         }
     
         if(!isNaN(rating)){
             if(rating > 5){
                 result.status = false;
-                result.errorMassage.push("nota não pode ser maior que 5")
+                result.errorMassage.push("rating can not be greater than 5");
             }
         }
         return result; 
