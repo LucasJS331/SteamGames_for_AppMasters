@@ -4,9 +4,9 @@ class GameService{
       try {
         await db.insert({
             user_name: gameData.user_name,
-            game_id: gameData.game_id,
+            appid: gameData.appid,
             rating: gameData.rating,
-            game_name: gameData.game_name,
+            name: gameData.name,
             is_free: gameData.is_free,
             detailed_description: gameData.detailed_description,
             type: gameData.type
@@ -20,7 +20,7 @@ class GameService{
 
    async delFavorite(id, user){
     try {
-       let result = await db.delete().from("favorite").where({game_id: id}).where({user_name: user});
+       let result = await db.delete().from("favorite").where({appid: id}).where({user_name: user});
        return result;
     } catch (error) {
         console.log(error);
@@ -30,7 +30,7 @@ class GameService{
 
    async allFavorites(user){
     try {
-      let result = await db.select(["id", "game_id", "game_name", "is_free","rating", "type", "detailed_description"]).table("favorite").where({user_name: user});
+      let result = await db.select(["id", "appid", "name", "is_free","rating", "type", "detailed_description"]).table("favorite").where({user_name: user});
       return result;
     } catch (error) {
        console.log(error);

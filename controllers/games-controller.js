@@ -64,12 +64,12 @@ class GamesController{
         const {data} = await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appid}`); 
         const convertedResp = Object.values(data); // transformando obj em array
         const gameData ={
-          game_name: convertedResp[0].data.name,
+          name: convertedResp[0].data.name,
           is_free: convertedResp[0].data.is_free,
           detailed_description: convertedResp[0].data.detailed_description,
           type: convertedResp[0].data.type,
           user_name:user_hash,
-          game_id: appid,
+          appid,
           rating
         }
         await gameService.addFavorite(gameData);
@@ -103,7 +103,7 @@ class GamesController{
         result = result > 0 ? res.send("favorite deleted successfully!") : res.sendStatus(404);  
       }
       else{
-        res.status(400).send("user invalid!");
+        res.status(400).send("user-hash invalid!");
       }
       
     } catch (error) {
@@ -127,14 +127,14 @@ class GamesController{
           // caso não houver cache
           let allFavorites = await gameService.allFavorites(user_hash);
           await client.set(`favorite:${user_hash}`, JSON.stringify(allFavorites), "EX", 1200);
-          allFavorites = allFavorites.length > 0 ? res.json(allFavorites) : res.sendStatus(404);
+          allFavorites = allFavorites.length > 0 ? res.json(allFavorites) : res.sendStatus(204);
         }else{
           // caso houver cache
           let allFavorites = JSON.parse(favorite);
-          allFavorites = allFavorites.length > 0 ? res.json(allFavorites) : res.sendStatus(404);
+          allFavorites = allFavorites.length > 0 ? res.json(allFavorites) : res.sendStatus(204);
         }
       } else{
-        res.status(400).send("user invalid!");
+        res.status(400).send("user-hash invalid!");
       }
     } catch (error) {
       console.log(error);
