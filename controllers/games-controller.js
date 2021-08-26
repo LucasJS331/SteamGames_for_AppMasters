@@ -11,15 +11,15 @@ class GamesController{
           const resp = (await axios.get("https://api.steampowered.com/ISteamApps/GetAppList/v0002/?format=json")).data.applist.apps
           let gameList = [];
           // reduzindo o array da resposta
-          for(let i = 50; i<=100; i++){
+          for(let i = 0; i<=100; i++){
             gameList.push(resp[i])
           }
           await client.set("gameCache", JSON.stringify(gameList), "EX", 1200);
-          res.json({gameList});
+          res.json(gameList);
 
         } else{
           let gameList = JSON.parse(gamesCache)
-          res.json({gameList})
+          res.json(gameList)
         }
         
       } catch (error) {
@@ -35,7 +35,7 @@ class GamesController{
         // caso id for valido
         const gameInfo = await client.get(`gameInfo${appid}`)
         if(!gameInfo){
-          const resp = (await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appid}`)).data
+          const resp = (await axios.get(`https://store.steampowered.com/api/appdetails?appids=${appid}`)).data  
           await client.set(`gameInfo${appid}`, JSON.stringify(resp),"EX", 1200);
           res.json(resp);
           
@@ -56,7 +56,7 @@ class GamesController{
 
   async addfavorite(req,res){
     const {appid,rating} = req.body;
-    const {user_hash} = req.headers;
+    const user_hash =  req.headers['user-hash']
     try {
       let result = validator.gameValidator(user_hash,appid,rating);
       if(result.status){
@@ -93,7 +93,7 @@ class GamesController{
 
   async deleteFavorite(req,res){
     const {appid} = req.params;
-    const {user_hash} = req.headers;
+    const user_hash =  req.headers['user-hash'];
 
     try {
       let verify = validator.userHash(user_hash);
@@ -115,7 +115,8 @@ class GamesController{
   }
 
   async getFavorits(req,res){
-    const {user_hash} = req.headers;
+    const user_hash =  req.headers['user-hash'];
+
     try {
       let verify = validator.userHash(user_hash);
 
